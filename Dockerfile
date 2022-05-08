@@ -10,17 +10,11 @@ RUN apt-get update
 ENV TZ JST-9
 ENV TERM xterm
 
-# ENV API_KEY=${API_KEY}
-# ENV API_KEY_SECRET=${API_KEY_SECRET}
-# ENV BEARER_TOKEN=${BEARER_TOKEN}
-# ENV ACCESS_TOKEN=${ACCESS_TOKEN}
-# ENV ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
-COPY requirements.txt /tmp/
+COPY requirements.txt /root/
 
 RUN apt-get install -y vim less
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
 
 RUN python -m pip install jupyterlab
-RUN pip install -r /tmp/requirements.txt
-# abcdefg
+RUN pip install -r /root/requirements.txt

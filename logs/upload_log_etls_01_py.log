@@ -6,3 +6,7 @@
 2022-05-08 01:47:34,817 - Log - INFO - ./upload_py
 2022-05-08 01:47:34,820 - Log - INFO - {'title': 'modules', 'id': 'takkawa/modules', 'subtitle': '', 'description': '', 'isPrivate': True, 'licenses': [{'name': 'unknown'}], 'keywords': [], 'collaborators': [], 'data': [{'description': '01_py', 'name': 'fin_etl.py', 'totalBytes': 6116, 'columns': []}]}
 2022-05-08 01:47:34,822 - Log - INFO - ['kaggle', 'datasets', 'version', '-p', './upload_py', '-m', '"01_py"']
+2022-05-08 23:43:25,227 - Log - INFO - ./upload_py
+2022-05-08 23:43:25,235 - Log - INFO - {'title': 'modules', 'id': 'takkawa/modules', 'subtitle': '', 'description': '', 'isPrivate': True, 'licenses': [{'name': 'unknown'}], 'keywords': [], 'collaborators': [], 'data': [{'description': '01_py', 'name': 'preparefile.py', 'totalBytes': 1617, 'columns': []}, {'description': '01_py', 'name': 'fin_etl.py', 'totalBytes': 6885, 'columns': []}, {'description': '01_py', 'name': 'tech_etl.py', 'totalBytes': 4830, 'columns': []}]}
+2022-05-08 23:43:25,236 - Log - INFO - ['kaggle', 'datasets', 'create', '-p', './upload_py', '-m', '"01_py"']
+2022-05-08 23:43:25,237 - Log - INFO - ['kaggle', 'datasets', 'version', '-p', './upload_py', '-m', '"01_py"']

@@ -38,7 +38,7 @@ class storage_file(object) :
 
         if os.path.exists(self.storage_dir+filename) :
             os.remove(self.storage_dir+filename)
-
+    
         shutil.copyfile(
             self.storage_dir+"base_"+filename,
             self.storage_dir+filename

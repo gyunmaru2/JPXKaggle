@@ -26,7 +26,7 @@ class technicals_etl(object) :
         """
 
         for path,query in zip(paths,queries) :
-            tmp = tmp.read_csv(path,dtype="str")
+            tmp = pd.read_csv(path,dtype="str")
             if query is not None :
                 tmp = tmp.query(query)
                 tmp = tmp.reset_index(drop=True)

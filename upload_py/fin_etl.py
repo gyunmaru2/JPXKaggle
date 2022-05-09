@@ -71,7 +71,7 @@ class financials_etl(object) :
         """
 
         for path,query in zip(paths,queries) :
-            tmp = tmp.read_csv(path,dtype="str")
+            tmp = pd.read_csv(path,dtype="str")
             if query is not None :
                 tmp = tmp.query(query)
                 tmp = tmp.reset_index(drop=True)
@@ -216,7 +216,7 @@ class financials_etl(object) :
         dfs = []
         for count,code in enumerate(codes) :
 
-            print(code)
+            # print(code)
 
             tmp = self.screen_stock(fin,code)
             if tmp.shape[0] == 0 :
@@ -235,6 +235,8 @@ class financials_etl(object) :
 
             if self.debug & (count==2) :
                 break
+            if count % 100 == 0 :
+                print(count,":",len(codes))
 
         return pd.concat(dfs)
 

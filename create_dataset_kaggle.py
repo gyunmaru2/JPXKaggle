@@ -36,7 +36,7 @@ class prepare_dataset(object) :
         fin = financials_etl()
         fin.read_file(self.storage_dir+"financials.csv")
         df =  fin.run_etl()
-        df.to_csv(self.storage_dir+"fin_features.csv",
+        df.to_csv(self.storage_dir+"fin_feature.csv",
             index=False)
         del(df)
 

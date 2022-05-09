@@ -28,6 +28,8 @@ class prepare_dataset_local(prepare_dataset):
                     .strftime("%Y%m%d%H%M%S")
         if version[-1] != "/" :
             self.storage_dir += version + "/"
+        if not os.path.exists(self.storage_dir):
+            os.makedirs(self.storage_dir)
 
         for file in self.files :
 

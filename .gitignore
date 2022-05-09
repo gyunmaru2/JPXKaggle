@@ -1,3 +1,4 @@
 etl.py
 create_dataset.py
 kaggle.json
+logs/*

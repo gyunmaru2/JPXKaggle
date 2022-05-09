@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import datetime 
+import shutil
 
 class storage_file(object) :
 
@@ -14,7 +15,13 @@ class storage_file(object) :
     storage_dir = "/kaggle/working/JPXKaggle/"
     
 
-    def __init__(self) :
+    def __init__(self,private_board=False) :
+
+        self.private_board = private_board
+        if private_board :
+            self.storage_dir += "private_board/"
+        else :
+            self.storage_dir += "public_board/"
 
         if not os.path.exists(self.storage_dir) :
             os.makedirs(self.storage_dir)
@@ -23,6 +30,19 @@ class storage_file(object) :
 
         hiduke = datetime.datetime.today().strftime("%Y%m%d")
         df.to_csv(name_base+f"_{hiduke}.csv",index=False)
+
+    def copy_base_file(self,filename) :
+
+        if filename[-4:] != ".csv" :
+            filename += ".csv"
+
+        if os.path.exists(self.storage_dir+filename) :
+            os.remove(self.storage_dir+filename)
+
+        shutil.copyfile(
+            self.storage_dir+"base_"+filename,
+            self.storage_dir+filename
+        )
 
     def add_online_data(self,newdf,filename) :
 
@@ -36,12 +56,12 @@ class storage_file(object) :
                 header = False, index = False 
             )
 
-    def create_base_file(self,filename,private_board=False) :
+    def create_base_file(self,filename) :
 
         if filename in ("financials.csv") :
             querystr = "Date >= '2019-12-31'"
         else :
-            if private_board:
+            if self.private_board:
                 querystr = "Date >= '2020-12-31'"
             else :
                 querystr = "Date >= '2021-06-30'"
@@ -51,7 +71,7 @@ class storage_file(object) :
         )
         tmp1 = tmp1.query(querystr)
 
-        if ~private_board :
+        if ~self.private_board :
             tmp2 = pd.read_csv(
                 self.supplemental_files+filename, dtype=str
             )
@@ -61,7 +81,7 @@ class storage_file(object) :
                     .reset_index(drop=True)
 
         tmp1.to_csv(
-            self.storage_dir+filename,index=False
+            self.storage_dir+"base_"+filename,index=False
         )
 
 

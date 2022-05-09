@@ -34,7 +34,7 @@ class prepare_dataset_local(prepare_dataset):
             if os.path.exists(self.storage_dir+file+".csv") :
                 os.remove(self.storage_dir+file+".csv")
 
-            shutil.copyfile(self.trian_files+file+".csv",
+            shutil.copyfile(self.train_files+file+".csv",
                 self.storage_dir+file+".csv"
             )
 

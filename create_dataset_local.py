@@ -21,7 +21,7 @@ class prepare_dataset_local(prepare_dataset):
             config_= json.load(f)
 
         self.storage_dir = config_['storage']
-        self.trian_files = config_['trian_files']
+        self.train_files = config_['train_files']
 
         if version is None :
             version = datetime.datetime.today()\

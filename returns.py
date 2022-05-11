@@ -5,7 +5,6 @@ import os
 import sys 
 import json
 
-from beta import market_return
 
 class return_calcurator:
 

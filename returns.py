@@ -89,12 +89,13 @@ class return_calcurator:
         return_stock_returns=False; return_mkt_return=False
         if (stock_returns is None) & (mkt_return is None):
             return_stock_returns=True;return_mkt_return=True
-            mkt_return, stock_returns = self.index_return()
+            mkt_return, stock_returns = self.market_return()
         elif stock_returns is None :
             return_stock_returns=True
             stock_returns = self.sector_return()
         elif mkt_return is None :
             return_mkt_return=True
+            mkt_return = self.market_return(stock_returns)
 
         sl = pd.read_csv(self.config_['kaggle_return']+"stock_list.csv")
         inds = stock_returns.merge(sl.loc[:,['SecuritiesCode','33SectorCode']],

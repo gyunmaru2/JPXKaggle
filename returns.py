@@ -97,7 +97,7 @@ class return_calcurator:
             return_mkt_return=True
             mkt_return = self.market_return(stock_returns)
 
-        sl = pd.read_csv(self.config_['kaggle_return']+"stock_list.csv")
+        sl = pd.read_csv(self.kaggle_return+"stock_list.csv")
         inds = stock_returns.merge(sl.loc[:,['SecuritiesCode','33SectorCode']],
             on="SecuritiesCode",how="left")\
             .drop(columns=['SecuritiesCode'])\

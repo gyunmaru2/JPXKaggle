@@ -39,7 +39,7 @@ class return_calcurator:
                     .sort_values('Date')\
                     .loc[:,['Date','SecuritiesCode','Close','AdjustmentFactor']]\
                     .reset_index(drop=True)
-            tmp = tmp.assign(cadj=tmp.AdjustmentFactor[::-1].cumprod())
+            tmp = tmp.assign(cadj=tmp.loc[:,'AdjustmentFactor'][::-1].cumprod())
             for c in ['Close'] :
                 tmp.loc[:,c] = tmp.loc[:,c] * tmp.cadj
 

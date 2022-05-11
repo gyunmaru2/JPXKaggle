@@ -37,7 +37,7 @@ class return_calcurator:
         for code in codes :
             tmp = price.query(f"SecuritiesCode == '{code}'")\
                     .sort_values('Date')\
-                    .loc[:,['Date','SecuritiesCode','Close']]\
+                    .loc[:,['Date','SecuritiesCode','Close','AdjustmentFactor']]\
                     .reset_index(drop=True)
             tmp = tmp.assign(cadj=tmp.AdjustmentFactor[::-1].cumprod())
             for c in ['Close'] :

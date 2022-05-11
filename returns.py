@@ -55,7 +55,7 @@ class return_calcurator:
 
     def index_return(self,pdf,thrs=(0.01,0.99)) :
 
-        u,b = thrs
+        b,u = thrs
         if pdf.shape[0]== 0 :
             return np.nan
         assert ('rtn_p1d' in pdf.columns), """

@@ -31,7 +31,7 @@ class return_calcurator:
                 errors = "coerce")
 
 
-    def return_on_adjusted_close(self,query=None) :
+    def return_on_adjusted_close(self,query=None,window=1) :
 
         if not (query is None):
             self.price = self.price.query(query).reset_index(drop=True)
@@ -50,12 +50,38 @@ class return_calcurator:
             for c in ['Close'] :
                 tmp.loc[:,c] = tmp.loc[:,c] * tmp.cadj
 
-            tmp.loc[:,'rtn_p1d'] = tmp.Close.pct_change(1)
-            aps.append(tmp.loc[:,['Date','SecuritiesCode','rtn_p1d']])
+            tmp.loc[:,'rtn_p1d'] = tmp.Close.pct_change(window)
+            aps.append(tmp.loc[:,['Date','SecuritiesCode',f'rtn_p{window}d']])
 
         aps = pd.concat(aps).reset_index(drop=True)
 
         return aps
+
+    def rolling_return(self,rtn_df:pd.DataFrame,roll=1,
+            rtn_col_name:str="rtn_p1d"
+        ):
+
+        new_col_name = ""
+        if rtn_col_name[:3] == "rtn" :
+            new_col_name = "rtn_p%dd" % roll
+        elif rtn_col_name[:3] == "sp_" :
+            new_col_name = "sp_p%dd" % roll 
+        else :
+            raise(ValueError(f"{rtn_col_name} is not pre registared "
+                " type of return column name "
+            ))
+
+        dfs = []
+        for code in rtn_df.SecuritiesCode.unique():
+            df = rtn_df.loc[rtn_df.SecuritiesCode==code,:].copy()
+            df.loc[:,f"rtn_p{roll}d"] = np.nan
+            df.loc[:,f"rtn_p{roll}d"] = df.loc[:,rtn_col_name].rolling(roll)\
+                    .apply(lambda x: (1.+x).cumprod()-1.)
+
+            dfs.append(df)
+
+        return pd.concat(dfs).reset_index(drop=True)
+
 
     def index_return(self,pdf,thrs=(0.01,0.99)) :
 
@@ -118,7 +144,7 @@ class return_calcurator:
         else :
             return inds
 
-    def normalise_return(self,rtn:pd.DataFrame,rtn_col_name:str='Target'):
+    def normalize_return(self,rtn:pd.DataFrame,rtn_col_name:str='Target'):
 
         if 'SecuritiesCode' in rtn.columns :
             pass
@@ -126,12 +152,21 @@ class return_calcurator:
         dfs = []
         for dt in rtn.Date.unique():
             df = rtn.loc[rtn.Date==dt,:]\
-                    .dropna(subset=rtn_col_name)
+                    .dropna(subset=rtn_col_name)\
+                    .copy()
             
             hhensa = df.loc[:,rtn_col_name].std()
             heikin = df.loc[:,rtn_col_name].mean()
+            df.loc[:,rtn_col_name+"_normalized"] = np.nan
+            df.loc[:,rtn_col_name+"_normalized"] = (
+                df.loc[:,rtn_col_name] - heikin)/hhensa
+            dfs.append(df)
 
-            df.loc[:,rtn_col_name] = (df.loc[:,rtn_col_name] - heikin)/hhensa
+        dfs = pd.concat(dfs).reset_index(drop=True)
+
+        return dfs
+
+
 
 
 

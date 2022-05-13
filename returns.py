@@ -11,6 +11,8 @@ class return_calcurator:
     def __init__(self):
 
         print(os.path.abspath(__file__))
+        print(os.path.dirname(
+            os.path.abspath(__file__)))
 
         with open("./local_settings.json","r") as f :
             config_ = json.load(f)

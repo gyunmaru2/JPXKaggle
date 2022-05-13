@@ -10,11 +10,11 @@ class return_calcurator:
 
     def __init__(self):
 
-        print(os.path.abspath(__file__))
-        print(os.path.dirname(
-            os.path.abspath(__file__)))
+        this_file_dir = os.path.dirname(
+            os.path.abspath(__file__)
+        )
 
-        with open("./local_settings.json","r") as f :
+        with open(f"{this_file_dir}/local_settings.json","r") as f :
             config_ = json.load(f)
 
         self.train_files = config_['train_files']

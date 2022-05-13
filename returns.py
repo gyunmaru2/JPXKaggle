@@ -50,7 +50,7 @@ class return_calcurator:
             for c in ['Close'] :
                 tmp.loc[:,c] = tmp.loc[:,c] * tmp.cadj
 
-            tmp.loc[:,'rtn_p1d'] = tmp.Close.pct_change(window)
+            tmp.loc[:,f'rtn_p{window}d'] = tmp.Close.pct_change(window)
             aps.append(tmp.loc[:,['Date','SecuritiesCode',f'rtn_p{window}d']])
 
         aps = pd.concat(aps).reset_index(drop=True)

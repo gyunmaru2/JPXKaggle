@@ -10,6 +10,8 @@ class return_calcurator:
 
     def __init__(self):
 
+        print(os.path.abspath(__file__))
+
         with open("./local_settings.json","r") as f :
             config_ = json.load(f)
 
@@ -113,3 +115,21 @@ class return_calcurator:
             return inds, mkt_return
         else :
             return inds
+
+    def normalise_return(self,rtn:pd.DataFrame,rtn_col_name:str='Target'):
+
+        if 'SecuritiesCode' in rtn.columns :
+            pass
+        
+        dfs = []
+        for dt in rtn.Date.unique():
+            df = rtn.loc[rtn.Date==dt,:]\
+                    .dropna(subset=rtn_col_name)
+            
+            hhensa = df.loc[:,rtn_col_name].std()
+            heikin = df.loc[:,rtn_col_name].mean()
+
+            df.loc[:,rtn_col_name] = (df.loc[:,rtn_col_name] - heikin)/hhensa
+
+
+

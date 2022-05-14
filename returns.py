@@ -74,8 +74,8 @@ class return_calcurator:
         dfs = []
         for code in rtn_df.SecuritiesCode.unique():
             df = rtn_df.loc[rtn_df.SecuritiesCode==code,:].copy()
-            df.loc[:,f"rtn_p{roll}d"] = np.nan
-            df.loc[:,f"rtn_p{roll}d"] = df.loc[:,rtn_col_name].rolling(roll)\
+            df.loc[:,new_col_name] = np.nan
+            df.loc[:,new_col_name] = df.loc[:,rtn_col_name].rolling(roll)\
                     .apply(lambda x: (1.+x).cumprod()-1.)
 
             dfs.append(df)

@@ -7,4 +7,4 @@ Still under construction....
 
 ### Risk Models and Spesific returns
 
-<img src="https://render.githubusercontent.com/render/math?math=rtn\_{i,t} = \beta_i^{mkt} mkt_t + \beta_i^{sec} sector{\_}return_t + spesific{\_}return_t ">
+<img src="https://render.githubusercontent.com/render/math?math=rtn_{i,t} = \beta_i^{mkt} mkt_t \+ \beta_i^{sec} sector{\_}return_t \+ spesific{\_}return_t ">

@@ -156,7 +156,7 @@ class return_calcurator:
             
             hhensa = df.loc[:,rtn_col_name].std()
             heikin = df.loc[:,rtn_col_name].mean()
-            df.loc[:,rtn_col_name+"_normalized"] = np.nan
+            # df.loc[:,rtn_col_name+"_normalized"] = np.nan
             df.loc[:,rtn_col_name+"_normalized"] = (
                 df.loc[:,rtn_col_name] - heikin)/hhensa
             dfs.append(df)

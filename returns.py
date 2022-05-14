@@ -151,7 +151,7 @@ class return_calcurator:
         dfs = []
         for dt in rtn.Date.unique():
             df = rtn.loc[rtn.Date==dt,:]\
-                    .dropna(subset=rtn_col_name)\
+                    .dropna(subset=[rtn_col_name])\
                     .copy()
             
             hhensa = df.loc[:,rtn_col_name].std()

@@ -63,11 +63,11 @@ class prepare_dataset_for_train(object) :
         is_feature_qtrly:Optional[Union[bool,List[bool]]]=None
     ):
 
-        if ~isinstance(use_feature_files,list) :
+        if not isinstance(use_feature_files,list) :
             use_feature_files = [use_feature_files]
         if is_feature_qtrly is None :
             is_feature_qtrly = [False]*len(use_feature_files)
-        if ~isinstance(is_feature_qtrly,list) :
+        if not isinstance(is_feature_qtrly,list) :
             is_feature_qtrly = [is_feature_qtrly]
 
         assert len(use_feature_files) == len(is_feature_qtrly), f"""
@@ -83,7 +83,7 @@ class prepare_dataset_for_train(object) :
         for ff,qf in zip(use_feature_files,is_feature_qtrly):
 
             feat = pd.read_csv(ff)
-            if ~qf :
+            if not qf :
                 target = target.merge(feat,on=['Date','SecuritiesCode'],
                     how = "left"
                 )

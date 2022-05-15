@@ -75,7 +75,9 @@ class prepare_dataset_for_train(object) :
             lenght of is_feature_qtrly({len(is_feature_qtrly)}) differs
         """
 
-        target = pd.read_csv(target_file)
+        target = pd.read_csv(target_file,dtype={
+            "Date":str,"SecuritiesCode":str,"Target":float
+        })
         target = target.drop_duplicates(subset=['Date','SecuritiesCode'])\
                 .reset_index(drop=True)
 
@@ -83,6 +85,11 @@ class prepare_dataset_for_train(object) :
         for ff,qf in zip(use_feature_files,is_feature_qtrly):
 
             feat = pd.read_csv(ff)
+            for col in feat.columns :
+                if col in ['Date','SecuritiesCode'] :
+                    continue
+                feat.loc[:,col] = pd.to_numeric(feat.loc[:,col],
+                    erros="coerce")
             if not qf :
                 target = target.merge(feat,on=['Date','SecuritiesCode'],
                     how = "left"

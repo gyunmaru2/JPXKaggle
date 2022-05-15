@@ -84,7 +84,7 @@ class prepare_dataset_for_train(object) :
 
         for ff,qf in zip(use_feature_files,is_feature_qtrly):
 
-            feat = pd.read_csv(ff)
+            feat = pd.read_csv(ff,dtype={"Date":str,"SecuritiesCode":str})
             for col in feat.columns :
                 if col in ['Date','SecuritiesCode'] :
                     continue

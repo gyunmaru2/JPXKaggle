@@ -9,6 +9,7 @@ import json
 from typing import Optional, Union, List
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 from scipy.stats import norm
 
 #%% 
@@ -120,7 +121,7 @@ class prepare_dataset_for_train(object) :
 
         dates = ds.Date.unique()
 
-        for tg,mt in zip(nt,nm) :
+        for tg,mt in tqdm(zip(nt,nm),total=len(nt)) :
             for hiduke in dates :
                 try :
                     ds.loc[ds.Date==hiduke,tg] = self._normalize(
@@ -128,6 +129,7 @@ class prepare_dataset_for_train(object) :
                     )
                 except:
                     print(tg,hiduke)
+                    raise(ValueError())
 
         return ds
 

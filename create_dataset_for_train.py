@@ -2,13 +2,11 @@
 
 # %%
 
-from imp import is_builtin
 import os
 import datetime
 import sys
 import json
 from typing import Optional, Union, List
-from xmlrpc.client import boolean
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
@@ -34,7 +32,7 @@ class prepare_dataset_for_train(object) :
     def run(self,
         target_file:str,
         use_feature_files:Union[str,List[str]],
-        is_feature_qtrly:Optional[Union[boolean,List[boolean]]]=None,
+        is_feature_qtrly:Optional[Union[bool,List[bool]]]=None,
         normalize_targets:Optional[Union[str,List[str]]]=None,
         normalize_methods:Optional[Union[str,List[str]]]=None
     ):
@@ -62,7 +60,7 @@ class prepare_dataset_for_train(object) :
         self,
         target_file:str,
         use_feature_files:Union[str,List[str]],
-        is_feature_qtrly:Optional[Union[boolean,List[boolean]]]=None
+        is_feature_qtrly:Optional[Union[bool,List[bool]]]=None
     ):
 
         if ~isinstance(use_feature_files,list) :

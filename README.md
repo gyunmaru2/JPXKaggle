@@ -3,7 +3,8 @@ Still under construction....
 ### Target on stock_prices.csv
 
 - Target return seems to be calculated without dividend...
-- Is this gonna be same on private board
+- Is this gonna be same on private board?
+  - If that the case, we should add expected diviend on feature
 
 ### Risk Models and Spesific returns
 

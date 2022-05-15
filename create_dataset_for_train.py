@@ -89,7 +89,7 @@ class prepare_dataset_for_train(object) :
                 if col in ['Date','SecuritiesCode'] :
                     continue
                 feat.loc[:,col] = pd.to_numeric(feat.loc[:,col],
-                    erros="coerce")
+                    errors="coerce")
             if not qf :
                 target = target.merge(feat,on=['Date','SecuritiesCode'],
                     how = "left"

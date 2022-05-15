@@ -45,7 +45,7 @@ class prepare_dataset_for_train(object) :
         if normalize_targets is None :
             normalize_targets = target.drop(
                 columns=['Date','SecuritiesCode','Target']
-            )
+            ).columns.tolist()
         if normalize_methods is None :
             normalize_methods = ['blom']*len(normalize_targets)
 

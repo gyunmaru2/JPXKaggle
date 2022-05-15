@@ -122,9 +122,12 @@ class prepare_dataset_for_train(object) :
 
         for tg,mt in zip(nt,nm) :
             for hiduke in dates :
-                ds.loc[ds.Date==hiduke,tg] = self._normalize(
-                    ds.loc[ds.Date==hiduke,tg].values, mt
-                )
+                try :
+                    ds.loc[ds.Date==hiduke,tg] = self._normalize(
+                        ds.loc[ds.Date==hiduke,tg].values, mt
+                    )
+                except:
+                    print(tg,hiduke)
 
         return ds
 

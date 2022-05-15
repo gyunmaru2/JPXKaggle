@@ -113,7 +113,7 @@ class prepare_dataset_for_train(object) :
 
         dates = ds.Date.unique()
 
-        for tg,mt in zip(nt,mt) :
+        for tg,mt in zip(nt,nm) :
             for hiduke in dates :
                 ds.loc[ds.Date==hiduke,tg] = self._normalize(
                     ds.loc[ds.Date==hiduke,tg].values, mt

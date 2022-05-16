@@ -136,7 +136,7 @@ class prepare_dataset_for_train(object) :
             for hiduke in dates :
                 try :
                     _ds.loc[_ds.Date==hiduke,_tg] = self._normalize(
-                        ds.loc[_ds.Date==hiduke,_tg].values, mt
+                        ds.loc[_ds.Date==hiduke,_tg].values, _mt
                     )
                 except:
                     print(_tg,hiduke)

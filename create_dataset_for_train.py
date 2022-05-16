@@ -136,7 +136,7 @@ class prepare_dataset_for_train(object) :
 
         def _normalize_cross_section(_df,_nt,_nm):
 
-            def _normalize_blom(self,x):
+            def _normalize_blom(x):
                 if np.prod(np.isnan(x)) == 0:
                     x = np.nan_to_num(x, nan=np.nanmean(x))
                     r = np.argsort(np.argsort(x))
@@ -148,7 +148,7 @@ class prepare_dataset_for_train(object) :
             out = _df.copy()
             for _tg, _mt in zip(_nt,_nm):
                 out.loc[:,_tg]=_normalize_blom(
-                    out.loc[:,_tg].values,_mt
+                    out.loc[:,_tg].values
                 )
             return out
 

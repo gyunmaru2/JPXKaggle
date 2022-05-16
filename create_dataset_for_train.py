@@ -143,10 +143,14 @@ class prepare_dataset_for_train(object) :
     def _normalize_blom(self,x):
         # https://www.statsdirect.com/help/data_preparation/transform_normal_scores.htm
         # filling nan values with mean
-        x = np.nan_to_num(x, nan=np.nanmean(x))
-        r = np.argsort(np.argsort(x))
-        n = len(x)
-        return( norm.ppf((r-3/8)/(n+1/4)) )
+        if np.prod(np.isnan(x)) == 0:
+            x = np.nan_to_num(x, nan=np.nanmean(x))
+            r = np.argsort(np.argsort(x))
+            n = len(x)
+            return( norm.ppf((r-3/8)/(n+1/4)) )
+        else :
+            return(np.zeros(len(x)))
+
 
 
 

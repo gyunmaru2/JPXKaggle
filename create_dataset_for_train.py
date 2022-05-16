@@ -119,6 +119,8 @@ class prepare_dataset_for_train(object) :
     ) :
 
         ds = dataset
+        if self.debug :
+            ds = ds.loc[ds.Date<="2017-12-31",:]
         if isinstance(normalize_target,str) :
             normalize_target=[normalize_target]
         nt = normalize_target
@@ -132,25 +134,31 @@ class prepare_dataset_for_train(object) :
         p = Pool(cores)
         # p.apply_async(long_time_task, args=(i,))
 
-        def _normalize_by_date(_ds,_tg,_mt,dates) :
-            for hiduke in dates :
-                try :
-                    _ds.loc[_ds.Date==hiduke,_tg] = self._normalize(
-                        ds.loc[_ds.Date==hiduke,_tg].values, _mt
-                    )
-                except:
-                    print(_tg,hiduke)
-                    raise(ValueError())
+        def _normalize_cross_section(_df,_nt,_nm):
 
-        for tg,mt in tqdm(zip(nt,nm),total=len(nt)) :
-            p.apply_async(_normalize_by_date,args=(
-                ds,tg,mt,dates
-            ))
+            out = _df.copy()
+            for _tg, _mt in zip(_nt,_nm):
+                out.loc[:,_tg]=self._normalize(
+                    out.loc[:,_tg].values,_mt
+                )
+            return out
+
+        outputs = []
+        with tqdm(total=len(dates)) as t:
+            for hiduke in dates :
+                res = p.apply_async(
+                        _normalize_cross_section, args=(
+                            ds.loc[ds.Date==hiduke,:],nt,nm
+                        )
+                )
+                outputs.append(res.get(60*60))
+                t.update(1)
+
         p.close()
         p.join()
 
 
-        return ds
+        return pd.concat(outputs)
 
 
     def _normalize(self,x:np.ndarray,m:str='blom'):

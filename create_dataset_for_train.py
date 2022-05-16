@@ -134,11 +134,12 @@ class prepare_dataset_for_train(object) :
         p = Pool(cores)
         # p.apply_async(long_time_task, args=(i,))
 
+        _normalize = self._normalize
         def _normalize_cross_section(_df,_nt,_nm):
 
             out = _df.copy()
             for _tg, _mt in zip(_nt,_nm):
-                out.loc[:,_tg]=self._normalize(
+                out.loc[:,_tg]=_normalize(
                     out.loc[:,_tg].values,_mt
                 )
             return out

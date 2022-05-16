@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from scipy.stats import norm
+from multiprocessing import Pool
+import multiprocessing
 
 #%% 
 
@@ -121,15 +123,25 @@ class prepare_dataset_for_train(object) :
 
         dates = ds.Date.unique()
 
-        for tg,mt in tqdm(zip(nt,nm),total=len(nt)) :
+        cores = multiprocessing.cpu_count()
+        p = Pool(cores)
+        # p.apply_async(long_time_task, args=(i,))
+
+        def _normalize_by_date(_ds,_tg,_mt,dates) :
             for hiduke in dates :
                 try :
-                    ds.loc[ds.Date==hiduke,tg] = self._normalize(
-                        ds.loc[ds.Date==hiduke,tg].values, mt
+                    _ds.loc[_ds.Date==hiduke,_tg] = self._normalize(
+                        ds.loc[_ds.Date==hiduke,_tg].values, mt
                     )
                 except:
-                    print(tg,hiduke)
+                    print(_tg,hiduke)
                     raise(ValueError())
+
+        for tg,mt in tqdm(zip(nt,nm),total=len(nt)) :
+            p.apply_async(_normalize_by_date,args=(
+                ds,tg,mt,dates
+            ))
+
 
         return ds
 

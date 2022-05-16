@@ -134,23 +134,6 @@ class prepare_dataset_for_train(object) :
         p = Pool(cores)
         # p.apply_async(long_time_task, args=(i,))
 
-        def _normalize_cross_section(_df,_nt):
-
-            def _normalize_blom(x):
-                if np.prod(np.isnan(x)) == 0:
-                    x = np.nan_to_num(x, nan=np.nanmean(x))
-                    r = np.argsort(np.argsort(x))
-                    n = len(x)
-                    return( norm.ppf((r-3/8)/(n+1/4)) )
-                else :
-                    return(np.zeros(len(x)))
-
-            out = _df.copy()
-            for _tg in _nt:
-                out.loc[:,_tg]=_normalize_blom(
-                    out.loc[:,_tg].values
-                )
-            return out
 
         outputs = []
         with tqdm(total=len(dates)) as t:
@@ -187,11 +170,25 @@ class prepare_dataset_for_train(object) :
         else :
             return(np.zeros(len(x)))
 
+# %%
 
+def _normalize_cross_section(_df,_nt):
 
+    def _normalize_blom(x):
+        if np.prod(np.isnan(x)) == 0:
+            x = np.nan_to_num(x, nan=np.nanmean(x))
+            r = np.argsort(np.argsort(x))
+            n = len(x)
+            return( norm.ppf((r-3/8)/(n+1/4)) )
+        else :
+            return(np.zeros(len(x)))
 
-
-
+    out = _df.copy()
+    for _tg in _nt:
+        out.loc[:,_tg]=_normalize_blom(
+            out.loc[:,_tg].values
+        )
+    return out
 
 
 

@@ -134,7 +134,7 @@ class prepare_dataset_for_train(object) :
         p = Pool(cores)
         # p.apply_async(long_time_task, args=(i,))
 
-        def _normalize_cross_section(_df,_nt,_nm):
+        def _normalize_cross_section(_df,_nt):
 
             def _normalize_blom(x):
                 if np.prod(np.isnan(x)) == 0:
@@ -146,7 +146,7 @@ class prepare_dataset_for_train(object) :
                     return(np.zeros(len(x)))
 
             out = _df.copy()
-            for _tg, _mt in zip(_nt,_nm):
+            for _tg in _nt:
                 out.loc[:,_tg]=_normalize_blom(
                     out.loc[:,_tg].values
                 )
@@ -157,7 +157,7 @@ class prepare_dataset_for_train(object) :
             for hiduke in dates :
                 res = p.apply_async(
                         _normalize_cross_section, args=(
-                            ds.loc[ds.Date==hiduke,:],nt,nm
+                            ds.loc[ds.Date==hiduke,:],nt
                         )
                 )
                 outputs.append(res.get(60*60))

@@ -18,11 +18,13 @@ import multiprocessing
 
 class prepare_dataset_for_train(object) :
 
-    def __init__(self):
+    def __init__(self,debug=False):
 
         this_file_dir = os.path.dirname(
             os.path.abspath(__file__)
         )
+
+        self.debug = debug
 
         with open(f"{this_file_dir}/local_settings.json","r") as f :
             config_ = json.load(f)
@@ -88,6 +90,9 @@ class prepare_dataset_for_train(object) :
         for ff,qf in zip(use_feature_files,is_feature_qtrly):
 
             feat = pd.read_csv(ff,dtype={"Date":str,"SecuritiesCode":str})
+            feat = feat.drop(columns=['RowId','Unnamed: 0'])
+            if self.debug:
+                print(feat.head())
             for col in feat.columns :
                 if col in ['Date','SecuritiesCode'] :
                     continue

@@ -146,6 +146,8 @@ class prepare_dataset_for_train(object) :
             p.apply_async(_normalize_by_date,args=(
                 ds,tg,mt,dates
             ))
+        p.close()
+        p.join()
 
 
         return ds

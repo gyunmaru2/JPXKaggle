@@ -176,11 +176,13 @@ def _normalize_cross_section(_df,_nt):
 
     def _normalize_blom(x):
         if np.prod(np.isnan(x)) == 0:
+            # at least one of the values is not None
             x = np.nan_to_num(x, nan=np.nanmean(x))
-            r = np.argsort(np.argsort(x))
+            r = np.argsort(np.argsort(x)) + 1
             n = len(x)
             return( norm.ppf((r-3/8)/(n+1/4)) )
         else :
+            # if all the values are zero, return 0 
             return(np.zeros(len(x)))
 
     out = _df.copy()

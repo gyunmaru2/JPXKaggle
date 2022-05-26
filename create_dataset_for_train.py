@@ -148,6 +148,7 @@ class prepare_dataset_for_train(object) :
 
         p.close()
         p.join()
+        p.terminate()
 
 
         return pd.concat(outputs)
@@ -178,6 +179,8 @@ def _normalize_cross_section(_df,_nt):
         if np.prod(np.isnan(x)) == 0:
             # at least one of the values is not None
             x = np.nan_to_num(x, nan=np.nanmean(x))
+            # res of argsort starts from index 0, adding one to start
+            # rank with 1.
             r = np.argsort(np.argsort(x)) + 1
             n = len(x)
             return( norm.ppf((r-3/8)/(n+1/4)) )

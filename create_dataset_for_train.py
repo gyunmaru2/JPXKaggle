@@ -131,7 +131,7 @@ class prepare_dataset_for_train(object) :
         dates = ds.Date.unique()
 
         cores = multiprocessing.cpu_count()
-        p = Pool(min(4,cores))
+        p = Pool(min(4,cores-1))
         # p.apply_async(long_time_task, args=(i,))
 
 

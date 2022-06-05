@@ -23,9 +23,9 @@ class kaggle_up :
                         comments: str,
                         update:bool,
                         logger=None,
-                        extension = None,
-                        subtitle='not spesified', 
-                        description="not spesified",
+                        extension = '.py',
+                        subtitle='', 
+                        description="",
                         isPrivate = True,
                         licenses = "unknown" ,
                         keywords = [],
@@ -50,22 +50,13 @@ class kaggle_up :
         keywords : the list of keywords about the dataset, default is empty list.
         collaborators: the list of dataset collaborators, default is empty list.
     '''
-
-        assert os.path.exists(path) ,f"""
-            path {path} do not exists
-        """
-        if path[-1] == '/':
-            path = path[:-1]
-
-        if extension is not None :
-            model_list = glob.glob(path+f'/*{extension}')
-        else :
-            model_list = glob.glob(path+'/*')
-
+        model_list = glob.glob(path+f'/*{extension}')
         if len(model_list) == 0:
             raise FileExistsError('File does not exist, check the file extention is correct \
             or the file directory exist.')
         
+        if path[-1] == '/':
+            raise ValueError('Please remove the backslash in the end of the path')
         #JSONファイルの作成    
         data_json =  {
             "title": title,
@@ -103,7 +94,7 @@ class kaggle_up :
             json.dump(data_json, f)
         
     #データセットを新規で作るときのkaggle APIコマンド
-        script0 = ['kaggle',  'datasets', 'create', '-p', f'{path}' ]
+        script0 = ['kaggle',  'datasets', 'create', '-p', f'{path}' , '-m' , f'\"{comments}\"']
     #データセットを更新するときのkaggle APIコマンド
         script1 = ['kaggle',  'datasets', 'version', '-p', f'{path}' , '-m' , f'\"{comments}\"']
 
@@ -131,3 +122,62 @@ class kaggle_up :
                 print(subprocess.check_output(script0))
                 print(subprocess.check_output(script1))
 
+    def run(self):
+    #コマンドラインの引数からパラメータのあるyamlファイルを読み込む
+        # args = get_args()
+        # with open(args.config_path, 'r') as f:
+        #     config = yaml.safe_load(f)
+
+        # #yamlファイルにあるパラメータを変数に代入
+        # EXT = config['EXT']
+        # TRAINING = config['TRAINING']
+        # USE_FINETUNE = config['USE_FINETUNE']     
+        # FOLDS = config['FOLDS']
+        # GROUP_GAP = config['GROUP_GAP']
+        # SEED = config['SEED']
+        # INPUTPATH = config['INPUTPATH']
+        # NUM_EPOCH = config['NUM_EPOCH']
+        # BATCH_SIZE = config['BATCH_SIZE']
+        # PATIANCE = config['PATIANCE']
+        # LR =config['LR']
+        # DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # print(DEVICE)
+        # MDL_PATH  =config['MDL_PATH']
+        # MDL_NAME =config['MDL_NAME']
+        # VER = config['VER']
+        # THRESHOLD = config['THRESHOLD']
+        # COMMENT = config['COMMENT']
+        
+        MDL_NAME="etls";VER="01";EXT="py"
+        MDL_PATH='./upload_py'
+        #logger関連の定義
+        format_str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        logging.basicConfig(level = logging.INFO,format=format_str, filename=f'./logs/upload_log_{MDL_NAME}_{VER}_{EXT}.log')
+        logger = logging.getLogger('Log')
+        
+        ##https://ryoz001.com/1154.html
+        # コンソール画面用ハンドラー設定
+        # ハンドラーのログレベルを設定する (INFO以上を出力する)
+        consoleHandler = logging.StreamHandler()
+        consoleHandler.setLevel(logging.INFO)
+        # logger と コンソール用ハンドラーの関連付け
+        logger.addHandler(consoleHandler)
+        # logger.info(config)
+        # logger.info(sys.argv)
+        VER = (VER + '_' + EXT)
+        model_path = f'{MDL_PATH}'
+        logger.info(model_path)
+        
+        title = "modules"
+        k_id = "takkawa"
+        path = model_path
+        comments = VER
+        update = False
+        self.upload_to_kaggle(title, k_id, path,  comments, update,logger=logger)
+    
+    
+if __name__ == "__main__":
+    
+    ku = kaggle_up()
+
+    ku.run()

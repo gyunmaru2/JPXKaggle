@@ -112,7 +112,6 @@ class prepare_dataset_ver2(prepare_dataset):
 
         #Rank Gauss
         #https://tsumit.hatenablog.com/entry/2020/06/20/044835
-        #https://scikit-learn.org/stable/modules/preprocessing.html
         qt = QuantileTransformer(random_state=0, output_distribution='normal')
         qt.fit(tech[tech_fnames])
         # RankGaussによる変換を行い、num_colsの値を置換

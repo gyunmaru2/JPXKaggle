@@ -71,7 +71,7 @@ class storage_file(object) :
         )
         tmp1 = tmp1.query(querystr)
 
-        if ~self.private_board :
+        if not self.private_board :
             tmp2 = pd.read_csv(
                 self.supplemental_files+filename, dtype=str
             )

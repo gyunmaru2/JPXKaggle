@@ -3,8 +3,9 @@ import os
 import shutil
 
 wd = "/workspaces/JPXKaggle/"
-files = ['fin_etl.py','preparefile.py','tech_etl.py',
-    'create_dataset_kaggle.py'
+files = [
+    'fin_etl_online.py',
+    'tech_etl_online.py', 'create_dataset.py'
 ]
 
 for file in files :

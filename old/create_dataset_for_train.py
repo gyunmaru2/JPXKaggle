@@ -6,11 +6,13 @@ import os
 import datetime
 import sys
 import json
+import gc
 from typing import Optional, Union, List
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from scipy.stats import norm
+from sklearn.preprocessing import QuantileTransformer
 from multiprocessing import Pool
 import multiprocessing
 
@@ -24,9 +26,15 @@ class prepare_dataset_for_train(object) :
             os.path.abspath(__file__)
         )
 
+        target_dir = os.path.dirname(
+            os.path.dirname(
+                this_file_dir
+            )
+        )
+
         self.debug = debug
 
-        with open(f"{this_file_dir}/local_settings.json","r") as f :
+        with open(f"{target_dir}/local_settings.json","r") as f :
             config_ = json.load(f)
 
         self.train_files = config_['train_files']
@@ -57,6 +65,8 @@ class prepare_dataset_for_train(object) :
             normalize_target=normalize_targets,
             normalize_method=normalize_methods
         )
+
+        target = self.normalize_rank_gaussian(target)
 
         return target
 
@@ -110,7 +120,34 @@ class prepare_dataset_for_train(object) :
             
     def merge_qtrly_feature(self,target,feat) :
 
-        raise(NotImplementedError('Still Under Construction'))
+        target = target.merge(feat.rename(columns={"Date":"Date_"}),
+            on=['SecuritiesCode'],how='left')
+        target = target.loc[target.Date>=target.Date_,:]\
+                .sort_values(['SecuritiesCode','Date'])\
+                .drop_duplicates(subset=['SecurtiesCode','Date'],
+                    keep='last')\
+                .drop(columns=['Date_'])
+        target = target.reset_index(drop=True)
+
+        return target
+
+    def normalize_rank_gaussian(self,
+        dataset: pd.DataFrame
+    ):
+
+        ds = dataset
+        cores = multiprocessing.cpu_count()
+        p = Pool(min(3,cores-1))
+
+        dfg = ds.groupby('Date')
+        with Pool(cores) as p:
+            res_list = p.map(
+                _normalize_rank_gauss,[group for _,group in dfg])
+        dfg = pd.concat(res_list)
+
+        return dfg
+
+
 
     def normalize_features(self,
         dataset:pd.DataFrame,
@@ -171,12 +208,6 @@ class prepare_dataset_for_train(object) :
         else :
             return(np.zeros(len(x)))
 
-# %%
-
-class prepare_dataset_for_train_ver2(prepare_dataset_for_train) :
-
-    def __init__(self, debug=False):
-        self.debug = debug
 
 # %%
 
@@ -202,5 +233,16 @@ def _normalize_cross_section(_df,_nt):
         )
     return out
 
+# %%
+
+def _normalize_rank_gauss(pdf):
+
+    use_cols = pdf.drop(columns=['Date','SecuritiesCode']).columns
+    qt = QuantileTransformer(
+        random_state=0,output_distribution='normal')
+    qt.fit(pdf[use_cols])
+    pdf[use_cols] = qt.transform(pdf[use_cols])
+
+    return pdf
 
 

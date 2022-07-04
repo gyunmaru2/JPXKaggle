@@ -1,3 +1,4 @@
+# %%
 import glob
 import os
 import json
@@ -94,9 +95,9 @@ class kaggle_up :
             json.dump(data_json, f)
         
     #データセットを新規で作るときのkaggle APIコマンド
-        script0 = ['kaggle',  'datasets', 'create', '-p', f'{path}' , '-m' , f'\"{comments}\"']
+        script0 = ['kaggle',  'datasets', 'create', '-p', f'{path}' ]
     #データセットを更新するときのkaggle APIコマンド
-        script1 = ['kaggle',  'datasets', 'version', '-p', f'{path}' , '-m' , f'\"{comments}\"']
+        script1 = ['kaggle',  'datasets', 'version', '-p', f'{path}' , '-m' , f'{comments}']
 
 
         if logger:    
@@ -149,10 +150,13 @@ class kaggle_up :
         # COMMENT = config['COMMENT']
         
         MDL_NAME="etls";VER="01";EXT="py"
-        MDL_PATH='./upload_py'
+        # MDL_PATH='./upload_py'
+        MDL_PATH='./upload_py3'
         #logger関連の定義
         format_str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        logging.basicConfig(level = logging.INFO,format=format_str, filename=f'./logs/upload_log_{MDL_NAME}_{VER}_{EXT}.log')
+        logging.basicConfig(
+            level = logging.INFO,format=format_str, 
+            filename=f'./logs/upload_log_{MDL_NAME}_{VER}_{EXT}.log')
         logger = logging.getLogger('Log')
         
         ##https://ryoz001.com/1154.html
@@ -168,16 +172,20 @@ class kaggle_up :
         model_path = f'{MDL_PATH}'
         logger.info(model_path)
         
-        title = "modules"
+        title = "jpx-modules3"
+        # title = "modules"
         k_id = "takkawa"
         path = model_path
         comments = VER
-        update = False
-        self.upload_to_kaggle(title, k_id, path,  comments, update,logger=logger)
+        update = True
+        self.upload_to_kaggle(title, k_id, path,  comments, 
+        update,logger=logger)
     
+# %%
     
 if __name__ == "__main__":
     
     ku = kaggle_up()
 
     ku.run()
+# %%

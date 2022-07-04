@@ -328,7 +328,7 @@ class financials_etl(object) :
         self.debug = debug
 
         fin = self.fin.copy()
-        fin = fin.loc[fin.Date < calc_date , :]
+        fin = fin.loc[fin.Date <= calc_date , :]
 
         tmp = []
         for code in new_ :

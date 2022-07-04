@@ -100,51 +100,19 @@ class technicals_etl(object) :
     def __init__(self) :
 
         self.price = None
-        self.stock_list = None
 
-    def run_etl_groupby_mp(self,calc_date,
-        use_sec_rtn = False, debug=False):
+    def run_etl_groupby_mp(self,debug=False):
         
         price = self.price
-        sl = self.stock_list
         dfg = price.groupby('SecuritiesCode')
         with Pool(3) as p:
             res_list = p.map(
                 _pipeline, [group for name, group in dfg]
             )
         dfg = pd.concat(res_list).reset_index(drop=True)
-        use_cols = dfg.drop(columns=['Date','SecuritiesCode']).columns
-        for c in use_cols :
-            dfg.loc[:,c] = pd.to_numeric(
-                        dfg.loc[:,c],errors = "coerce")
+        # dfg.SecuritiesCode = dfg.SecuritiesCode.astype(int)
 
-        # ohclv
-        ohlcv = price.loc[price.Date==calc_date,['SecuritiesCode',
-            'Open','High','Low','Close','Volume'
-        ]].reset_index(drop=True)
-
-        # sector return
-        if use_sec_rtn :
-            need_these_cols = ["SecuritiesCode"]
-            rors = [f"ror_{i}" for i in [1,5,10,20,40,60,100]]
-            col_convert = {a:"sec_"+a for a in rors}
-
-            need_these_cols.extend(rors)
-            sec_rtn = dfg.loc[dfg.Date==calc_date,need_these_cols]
-
-            sec_rtn = sec_rtn.merge(sl,on=['SecuritiesCode'],how="left")
-            sec_rtn = sec_rtn.replace([np.inf,-np.inf],np.nan)
-            sec_rtn = sec_rtn.drop(columns=['SecuritiesCode'])\
-                .groupby("17SectorCode")\
-                .mean().reset_index(drop=False)\
-                .rename(columns=col_convert)
-            sec_rtn['17SectorCode'] = sec_rtn['17SectorCode'].astype(str)
-
-            return dfg, ohlcv, sec_rtn
-
-        else :
-
-            return dfg, ohlcv, None
+        return dfg
 
  
         

@@ -9,8 +9,8 @@ files = [
 ]
 
 for file in files :
-    if os.path.exists(wd+"upload_py/"+file) :
-        os.remove(wd+"upload_py/"+file)
-    shutil.copyfile(wd+file,wd+"upload_py/"+file)
+    if os.path.exists(wd+"upload_py3/"+file) :
+        os.remove(wd+"upload_py3/"+file)
+    shutil.copyfile(wd+file,wd+"upload_py3/"+file)
 
 # %%

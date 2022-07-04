@@ -102,8 +102,7 @@ class technicals_etl(object) :
         self.price = None
         self.stock_list = None
 
-    def run_etl_groupby_mp(self,calc_date,
-        use_sec_rtn = False, debug=False):
+    def run_etl_groupby_mp(self,calc_date,debug=False):
         
         price = self.price
         sl = self.stock_list
@@ -124,27 +123,23 @@ class technicals_etl(object) :
         ]].reset_index(drop=True)
 
         # sector return
-        if use_sec_rtn :
-            need_these_cols = ["SecuritiesCode"]
-            rors = [f"ror_{i}" for i in [1,5,10,20,40,60,100]]
-            col_convert = {a:"sec_"+a for a in rors}
+        need_these_cols = ["SecuritiesCode"]
+        rors = [f"ror_{i}" for i in [1,5,10,20,40,60,100]]
+        col_convert = {a:"sec_"+a for a in rors}
 
-            need_these_cols.extend(rors)
-            sec_rtn = dfg.loc[dfg.Date==calc_date,need_these_cols]
+        need_these_cols.extend(rors)
+        sec_rtn = dfg.loc[dfg.Date==calc_date,need_these_cols]
 
-            sec_rtn = sec_rtn.merge(sl,on=['SecuritiesCode'],how="left")
-            sec_rtn = sec_rtn.replace([np.inf,-np.inf],np.nan)
-            sec_rtn = sec_rtn.drop(columns=['SecuritiesCode'])\
-                .groupby("17SectorCode")\
-                .mean().reset_index(drop=False)\
-                .rename(columns=col_convert)
-            sec_rtn['17SectorCode'] = sec_rtn['17SectorCode'].astype(str)
+        sec_rtn = sec_rtn.merge(sl,on=['SecuritiesCode'],how="left")
+        sec_rtn = sec_rtn.replace([np.inf,-np.inf],np.nan)
+        sec_rtn = sec_rtn.drop(columns=['SecuritiesCode'])\
+            .groupby("17SectorCode")\
+            .mean().reset_index(drop=False)\
+            .rename(columns=col_convert)
+        sec_rtn['17SectorCode'] = sec_rtn['17SectorCode'].astype(str)
 
-            return dfg, ohlcv, sec_rtn
 
-        else :
-
-            return dfg, ohlcv, None
+        return dfg, ohlcv, sec_rtn
 
  
         
